@@ -10,6 +10,7 @@
 					<th scope="col">Nom</th>
 					<th scope="col">Quantité</th>
 					<th scope="col">Prix U</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -19,10 +20,14 @@
 					<td>{{ item.name }}</td>
 					<td>{{ item.qty }}</td>
 					<td>{{ item.price }}€</td>
+					<td><button type="button" class="btn btn-danger" @click="removeFromCart(item.reference)">Retirer</button></td>
 				</tr>
 			</tbody>
 		</table>
 		<div v-else>Panier vide</div>
+
+		<button type="button" class="btn btn-success mt-5 mr-3" @click="fillCart">Remplir le panier</button>
+		<button type="button" class="btn btn-danger mt-5" @click="resetCart">Vider le panier</button>
 	</div>
 </template>
 
@@ -47,7 +52,20 @@ const mock = [
 export default {
 	data: () => ({
 		cart: mock
-	})
+	}),
+	methods: {
+		resetCart: function() {
+			this.cart = []
+		},
+		fillCart: function() {
+			this.cart = mock
+		},
+		removeFromCart: function(reference) {
+			this.cart = this.cart.filter(item => {
+				return item.reference !== reference
+			})
+		}
+	}
 }
 </script>
 
