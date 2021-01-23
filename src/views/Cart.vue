@@ -25,7 +25,7 @@
 						<button type="button" class="btn btn-secondary" @click="itemQtyUpdate(item.reference, item.qty + 1)">+</button>
 					</td>
 					<td>{{ item.price }}€</td>
-					<td>{{ item.qty * item.price }}€</td>
+					<td>{{ round(item.qty * item.price) }}€</td>
 					<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmation" @click="selectWaitingConfirmation(item.reference)">Retirer</button></td>
 				</tr>
 			</tbody>
@@ -34,6 +34,22 @@
 
 		<button type="button" class="btn btn-success mt-5 mr-3" @click="fillCart">Remplir le panier</button>
 		<button type="button" class="btn btn-danger mt-5" @click="resetCart">Vider le panier</button>
+
+		<div class="card mt-5">
+			<div class="card-body">
+				<h2 class="card-title">
+					Livraison
+				</h2>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" :value="false" v-model="delivery" />
+					<label class="form-check-label" for="flexRadioDefault1"> Retrait en magasin : <b>GRATUIT</b> </label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" :value="true" v-model="delivery" />
+					<label class="form-check-label" for="flexRadioDefault2"> Livraison à domicile : <b>+50€</b> </label>
+				</div>
+			</div>
+		</div>
 
 		<h2 class="my-5">Recapitulatif</h2>
 		<table v-if="cart.length > 0" class="table">
@@ -52,15 +68,42 @@
 					<td>{{ item.name }}</td>
 					<td>{{ item.qty }}</td>
 					<td>{{ item.price }}€</td>
-					<td>{{ item.qty * item.price }}€</td>
+					<td>{{ round(item.qty * item.price) }}€</td>
 				</tr>
 				<tr>
-					<th scope="row">Total</th>
+					<th scope="row">Total HT</th>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td>
-						<b>{{ total }}€</b>
+						<b>{{ ht }}€</b>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Livraison</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<b>{{ fee }}€</b>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">TVA</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<b>{{ tva }}€</b>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">Total TTC</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<b>{{ ttc }}€</b>
 					</td>
 				</tr>
 			</tbody>
@@ -95,11 +138,21 @@ export default {
 	components: { ModalConfirmation },
 	data: () => ({
 		cart: mock,
-		waitingConfirmation: null
+		waitingConfirmation: null,
+		delivery: false
 	}),
 	computed: {
-		total: function() {
+		ht: function() {
 			return this.round(this.cart.reduce((acc, item) => acc + item.qty * item.price, 0))
+		},
+		fee: function() {
+			return this.delivery ? 50 : 0
+		},
+		tva: function() {
+			return this.round((this.ht + this.fee) * 0.2)
+		},
+		ttc: function() {
+			return this.ht + this.fee + this.tva
 		}
 	},
 	methods: {
