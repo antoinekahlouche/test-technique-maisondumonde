@@ -4,7 +4,7 @@
 			<div class="container">
 				<div class="navbar-header pull-left">
 					<router-link to="/" class="mr-4">Maison Normande</router-link>
-					<!-- Je suis en Normandie + Maison du monde = maison Normande ;) -->
+					<!-- Je suis en Normandie (ce WE) + Maison du monde = maison Normande ;) -->
 				</div>
 				<div class="navbar-header pull-right">
 					<router-link to="/cart" class="mr-4">Panier</router-link>
