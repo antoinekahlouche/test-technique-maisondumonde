@@ -110,6 +110,8 @@
 		</table>
 		<div v-else>Panier vide</div>
 
+		<router-link to="/success" class="btn btn-primary my-5">Acheter</router-link>
+
 		<ModalConfirmation :callback="removeFromCart" />
 	</div>
 </template>
