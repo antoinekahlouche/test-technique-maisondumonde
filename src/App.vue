@@ -8,7 +8,7 @@
 				</div>
 				<div class="navbar-header pull-right">
 					<router-link to="/cart" class="mr-4">Panier</router-link>
-					<router-link to="/promo">Promo</router-link>
+					<router-link to="/discount">Promo</router-link>
 				</div>
 			</div>
 		</div>

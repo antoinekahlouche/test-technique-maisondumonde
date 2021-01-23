@@ -1,7 +1,7 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 import Cart from "../views/Cart.vue"
-import Promo from "../views/Promo.vue"
+import Discount from "../views/Discount.vue"
 import NotFound from "../views/NotFound.vue"
 
 Vue.use(VueRouter)
@@ -13,8 +13,8 @@ const routes = [
 		component: Cart
 	},
 	{
-		path: "/promo",
-		component: Promo
+		path: "/discount",
+		component: Discount
 	},
 	{
 		path: "*",
