@@ -19,7 +19,11 @@
 					<th scope="row">{{ item.reference }}</th>
 					<td><img :src="item.images" height="150px" /></td>
 					<td>{{ item.name }}</td>
-					<td>{{ item.qty }}</td>
+					<td>
+						<button type="button" class="btn btn-secondary" @click="itemQtyUpdate(item.reference, item.qty - 1)">-</button>
+						{{ item.qty }}
+						<button type="button" class="btn btn-secondary" @click="itemQtyUpdate(item.reference, item.qty + 1)">+</button>
+					</td>
 					<td>{{ item.price }}€</td>
 					<td>{{ item.qty * item.price }}€</td>
 					<td><button type="button" class="btn btn-danger" @click="removeFromCart(item.reference)">Retirer</button></td>
@@ -106,6 +110,13 @@ export default {
 		},
 		round: function(value) {
 			return Math.round(value * 100) / 100
+		},
+		itemQtyUpdate: function(reference, qty) {
+			if (qty === 0) {
+				this.removeFromCart(reference)
+			} else {
+				this.cart.find(item => item.reference === reference).qty = qty
+			}
 		}
 	}
 }
