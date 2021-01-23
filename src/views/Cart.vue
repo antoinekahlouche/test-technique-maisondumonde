@@ -20,13 +20,13 @@
 					<td><img :src="item.images" height="150px" /></td>
 					<td>{{ item.name }}</td>
 					<td>
-						<button type="button" class="btn btn-secondary" @click="itemQtyUpdate(item.reference, item.qty - 1)">-</button>
+						<button type="button" class="btn btn-secondary" @click="itemQtyUpdate(item.reference, item.qty - 1)" :disabled="item.qty <= 1">-</button>
 						{{ item.qty }}
 						<button type="button" class="btn btn-secondary" @click="itemQtyUpdate(item.reference, item.qty + 1)">+</button>
 					</td>
 					<td>{{ item.price }}€</td>
 					<td>{{ item.qty * item.price }}€</td>
-					<td><button type="button" class="btn btn-danger" @click="removeFromCart(item.reference)">Retirer</button></td>
+					<td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmation" @click="selectWaitingConfirmation(item.reference)">Retirer</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -66,10 +66,14 @@
 			</tbody>
 		</table>
 		<div v-else>Panier vide</div>
+
+		<ModalConfirmation :callback="removeFromCart" />
 	</div>
 </template>
 
 <script>
+import ModalConfirmation from "@/components/ModalConfirmation"
+
 const mock = [
 	{
 		reference: "166174",
@@ -88,8 +92,10 @@ const mock = [
 ]
 
 export default {
+	components: { ModalConfirmation },
 	data: () => ({
-		cart: mock
+		cart: mock,
+		waitingConfirmation: null
 	}),
 	computed: {
 		total: function() {
@@ -103,20 +109,19 @@ export default {
 		fillCart: function() {
 			this.cart = mock
 		},
-		removeFromCart: function(reference) {
+		selectWaitingConfirmation: function(reference) {
+			this.waitingConfirmation = reference
+		},
+		removeFromCart: function() {
 			this.cart = this.cart.filter(item => {
-				return item.reference !== reference
+				return item.reference !== this.waitingConfirmation
 			})
 		},
 		round: function(value) {
 			return Math.round(value * 100) / 100
 		},
 		itemQtyUpdate: function(reference, qty) {
-			if (qty === 0) {
-				this.removeFromCart(reference)
-			} else {
-				this.cart.find(item => item.reference === reference).qty = qty
-			}
+			this.cart.find(item => item.reference === reference).qty = qty
 		}
 	}
 }
