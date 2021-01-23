@@ -10,6 +10,7 @@
 					<th scope="col">Nom</th>
 					<th scope="col">Quantité</th>
 					<th scope="col">Prix U</th>
+					<th scope="col">Total</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -20,6 +21,7 @@
 					<td>{{ item.name }}</td>
 					<td>{{ item.qty }}</td>
 					<td>{{ item.price }}€</td>
+					<td>{{ item.qty * item.price }}€</td>
 					<td><button type="button" class="btn btn-danger" @click="removeFromCart(item.reference)">Retirer</button></td>
 				</tr>
 			</tbody>
@@ -28,6 +30,38 @@
 
 		<button type="button" class="btn btn-success mt-5 mr-3" @click="fillCart">Remplir le panier</button>
 		<button type="button" class="btn btn-danger mt-5" @click="resetCart">Vider le panier</button>
+
+		<h2 class="my-5">Recapitulatif</h2>
+		<table v-if="cart.length > 0" class="table">
+			<thead>
+				<tr>
+					<th scope="col">Ref</th>
+					<th scope="col">Nom</th>
+					<th scope="col">Quantité</th>
+					<th scope="col">Prix U</th>
+					<th scope="col">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in cart" :key="item.reference" :value="item">
+					<th scope="row">{{ item.reference }}</th>
+					<td>{{ item.name }}</td>
+					<td>{{ item.qty }}</td>
+					<td>{{ item.price }}€</td>
+					<td>{{ item.qty * item.price }}€</td>
+				</tr>
+				<tr>
+					<th scope="row">Total</th>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<b>{{ total }}€</b>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div v-else>Panier vide</div>
 	</div>
 </template>
 
@@ -53,6 +87,11 @@ export default {
 	data: () => ({
 		cart: mock
 	}),
+	computed: {
+		total: function() {
+			return this.round(this.cart.reduce((acc, item) => acc + item.qty * item.price, 0))
+		}
+	},
 	methods: {
 		resetCart: function() {
 			this.cart = []
@@ -64,6 +103,9 @@ export default {
 			this.cart = this.cart.filter(item => {
 				return item.reference !== reference
 			})
+		},
+		round: function(value) {
+			return Math.round(value * 100) / 100
 		}
 	}
 }
