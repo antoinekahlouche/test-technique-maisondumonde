@@ -1,5 +1,7 @@
 # test-technique-maisondumonde
 
+Réalisé en 2 heures
+
 ## Project setup
 ```
 npm install
